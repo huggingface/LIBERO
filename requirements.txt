@@ -1,10 +1,7 @@
-# egl probe: point to canonical repo or a particular commit/tag
-# we use the canonical HF repo unless you need changes from a fork.
-egl_probe @ git+https://github.com/huggingface/egl_probe.git#egg=egl_probe
 # core runtime / reproducible pins where necessary
 hydra-core>=1.2,<1.4 # >=1.2 and <1.4 matches other code expecting hydra 1.2.x
-robomimic==0.2.0 # required exact version in your stacks
 robosuite==1.4.0 # pinned because changes break APIs often
+termcolor # used by robosuite; previously supplied by robomimic
 bddl==1.0.1 # pinned to the tested release
 
 # common libs, leave flexible unless you hit breakage
