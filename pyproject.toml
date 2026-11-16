@@ -15,12 +15,12 @@ requires-python = ">=3.8"
 
 dependencies = [
     # core runtime / reproducible pins
-    "hydra-core>=1.2,<1.4",
-    "robosuite==1.4.0",
-    "termcolor",
-    "bddl==1.0.1",
+    "hydra-core>=1.2,<1.4", # Compatible with code expecting Hydra 1.2 APIs.
+    "robosuite==1.4.0", # Pinned to avoid upstream API changes.
+    "termcolor", # Used by robosuite; previously supplied by robomimic.
+    "bddl==1.0.1", # Pinned to the tested release.
 
-    # common libs
+    # Common libraries: leave flexible unless compatibility requires a bound.
     "numpy",
     "transformers",
     "easydict",
@@ -38,7 +38,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-lifelong = ["robomimic==0.2.0"]
+lifelong = ["robomimic==0.2.0"] # Original lifelong code expects this version.
 
 [project.urls]
 Homepage = "https://github.com/huggingface/LIBERO"
