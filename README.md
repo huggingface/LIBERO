@@ -53,15 +53,23 @@ Please run the following commands in the given order to install the dependency f
 ```
 conda create -n libero python=3.8.13
 conda activate libero
-git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git
+git clone https://github.com/huggingface/LIBERO.git
 cd LIBERO
-pip install -r requirements.txt
 pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
 ```
 
-Then install the `libero` package:
+Then install the `libero` package and its runtime dependencies:
 ```
 pip install -e .
+```
+
+The default installation provides the benchmark environments without robomimic
+or either EGL probe package. Offscreen rendering uses MuJoCo's EGL backend
+(`MUJOCO_GL=egl`). To use the original training and evaluation code in
+`libero/lifelong`, install the optional dependencies:
+
+```bash
+pip install -e ".[lifelong]"
 ```
 
 # Datasets

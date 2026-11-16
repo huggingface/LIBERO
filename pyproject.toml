@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hf_libero"
-version = "0.1.4"
+version = "0.1.5"
 description = "LIBERO: Benchmark and environments for robot learning"
 authors = [
     { name = "Jade Choghari", email = "jade.choghari@huggingface.co" },
@@ -14,15 +14,13 @@ readme = "README.md"
 requires-python = ">=3.8"
 
 dependencies = [
-    # egl probe: canonical repo
-    "hf-egl-probe>=1.0.1",
     # core runtime / reproducible pins
-    "hydra-core>=1.2,<1.4",
-    "robomimic==0.2.0",
-    "robosuite==1.4.0",
-    "bddl==1.0.1",
+    "hydra-core>=1.2,<1.4", # Compatible with code expecting Hydra 1.2 APIs.
+    "robosuite==1.4.0", # Pinned to avoid upstream API changes.
+    "termcolor", # Used by robosuite; previously supplied by robomimic.
+    "bddl==1.0.1", # Pinned to the tested release.
 
-    # common libs
+    # Common libraries: leave flexible unless compatibility requires a bound.
     "numpy",
     "transformers",
     "easydict",
@@ -38,6 +36,9 @@ dependencies = [
     "mujoco>=3.0.0,<3.9.0",
     "future>=0.18.2",
 ]
+
+[project.optional-dependencies]
+lifelong = ["robomimic==0.2.0"] # Original lifelong code expects this version.
 
 [project.urls]
 Homepage = "https://github.com/huggingface/LIBERO"
