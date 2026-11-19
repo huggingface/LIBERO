@@ -1,4 +1,7 @@
 import os
+import sys
+import tempfile
+
 import yaml
 
 # This is a default path for localizing all the benchmark related files
@@ -62,8 +65,7 @@ def set_libero_default_path(custom_location=os.path.dirname(os.path.abspath(__fi
         yaml.dump(new_config, f)
 
 
-if not os.path.exists(libero_config_path):
-    os.makedirs(libero_config_path)
+os.makedirs(libero_config_path, exist_ok=True)
 
 def get_assets_path():
     """
@@ -101,9 +103,16 @@ if not os.path.exists(config_file):
     # Create a default config file
 
     default_path_dict = get_default_path_dict()
-    answer = input(
-        "Do you want to specify a custom path for the dataset folder? (Y/N): "
-    ).lower()
+    answer = "n"
+    if (
+        sys.stdin is not None
+        and sys.stdout is not None
+        and sys.stdin.isatty()
+        and sys.stdout.isatty()
+    ):
+        answer = input(
+            "Do you want to specify a custom path for the dataset folder? (Y/N): "
+        ).lower()
     if answer == "y":
         # If the user wants to specify a custom storage path, prompt them to enter it
         custom_dataset_path = input(
@@ -122,10 +131,18 @@ if not os.path.exists(config_file):
             if not os.path.exists(full_custom_dataset_path):
                 os.makedirs(full_custom_dataset_path)
             default_path_dict["datasets"] = full_custom_dataset_path
-    print("Initializing the default config file...")
-    print(f"The following information is stored in the config file: {config_file}")
-    # write all the paths into a yaml file
-    with open(config_file, "w") as f:
-        yaml.dump(default_path_dict, f)
-    for key, value in default_path_dict.items():
-        print(f"{key}: {value}")
+    # Publish a complete config without overwriting one created by another import.
+    config_target = os.path.realpath(config_file)
+    with tempfile.TemporaryDirectory(dir=os.path.dirname(config_target)) as tmpdir:
+        temporary_config = os.path.join(tmpdir, "config.yaml")
+        with open(temporary_config, "w") as f:
+            yaml.dump(default_path_dict, f)
+        try:
+            os.link(temporary_config, config_target)
+        except FileExistsError:
+            pass
+        else:
+            print("Initializing the default config file...")
+            print(f"The following information is stored in the config file: {config_file}")
+            for key, value in default_path_dict.items():
+                print(f"{key}: {value}")
